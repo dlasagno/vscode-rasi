@@ -1,0 +1,25 @@
+{
+    "name": "rasi",
+    "displayName": "Rasi",
+    "description": "Rofi theme language support",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.44.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "rasi",
+            "aliases": ["Rasi", "rasi"],
+            "extensions": [".rasi"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "rasi",
+            "scopeName": "source.rasi",
+            "path": "./syntaxes/rasi.tmLanguage.json"
+        }]
+    }
+}
