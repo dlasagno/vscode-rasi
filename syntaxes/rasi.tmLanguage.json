@@ -4,18 +4,64 @@
 	"scopeName": "source.rasi",
 	"patterns": [
 		{
-			"include": "#keywords"
+			"include": "#comments"
 		},
 		{
-			"include": "#strings"
+			"include": "#escapes"
+		},
+		{
+			"include": "#combinators"
+		},
+		{
+			"include": "#selector"
+		},
+		{
+			"include": "#at-rules"
+		},
+		{
+			"include": "#rule-list"
 		}
 	],
 	"repository": {
+		"comments": {
+			"patterns": [
+				{
+					"name": "comment.block.rasi",
+					"begin": "/\\*",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.rasi"
+						}
+					},
+					"end": "\\*/",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.rasi"
+						}
+					}
+				},
+				{
+					"name": "comment.line.rasi",
+					"begin": "//",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.rasi"
+						}
+					},
+					"end": "\\n"
+				}
+			]
+		},
+		"at_rules": {
+
+		},
 		"keywords": {
-			"patterns": [{
-				"name": "keyword.control.rasi",
-				"match": "\\b(if|while|for|return)\\b"
-			}]
+			"patterns": [
+				{
+					"name": "keyword.control.rasi",
+					"match": "\\b(if|while|for|return)\\b"
+				}
+			]
 		},
 		"strings": {
 			"name": "string.quoted.double.rasi",
