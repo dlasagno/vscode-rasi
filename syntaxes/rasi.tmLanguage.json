@@ -48,12 +48,42 @@
 							"name": "punctuation.definition.comment.rasi"
 						}
 					},
-					"end": "\\n"
+					"end": "$"
 				}
 			]
 		},
-		"at_rules": {
-
+		"at-rules": {
+			"patterns": [
+				{
+					"begin": "(?i)((@)import)(?:\\s+|$|(?=['\"]|/\\*))",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword.control.at-rule.import.rasi"
+						},
+						"2": {
+							"name": "punctuation.definition.keyword.rasi"
+						}
+					},
+					"end": "(\".*?(?<!\\\\)\"|$)",
+					"endCaptures": {
+						"1": {
+							"name": "string.quoted.double.rasi"
+						}
+					},
+					"name": "meta.at-rule.import.rasi",
+					"patterns": [
+						{
+							"begin": "\\G\\s*(?=/\\*)",
+							"end": "(?<=\\*/)\\s*",
+							"patterns": [
+								{
+									"include": "#comments"
+								}
+							]
+						}
+					]
+				}
+			]
 		},
 		"keywords": {
 			"patterns": [
