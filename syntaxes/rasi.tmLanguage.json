@@ -7,12 +7,6 @@
 			"include": "#comments"
 		},
 		{
-			"include": "#escapes"
-		},
-		{
-			"include": "#combinators"
-		},
-		{
 			"include": "#selector"
 		},
 		{
@@ -55,7 +49,7 @@
 		"at-rules": {
 			"patterns": [
 				{
-					"begin": "(?i)((@)import)(?:\\s+|$|(?=['\"]|/\\*))",
+					"begin": "(?i)((@)(?:import|theme))(?:\\s+|$|(?=['\"]|/\\*))",
 					"beginCaptures": {
 						"1": {
 							"name": "keyword.control.at-rule.import.rasi"
@@ -64,12 +58,7 @@
 							"name": "punctuation.definition.keyword.rasi"
 						}
 					},
-					"end": "(\".*?(?<!\\\\)\"|$)",
-					"endCaptures": {
-						"1": {
-							"name": "string.quoted.double.rasi"
-						}
-					},
+					"end": "(?<=\")(?=\\s*(/[/*]|$))|$",
 					"name": "meta.at-rule.import.rasi",
 					"patterns": [
 						{
@@ -80,16 +69,436 @@
 									"include": "#comments"
 								}
 							]
+						},
+						{
+							"include": "#strings"
+						}
+					]
+				},
+				{
+					"begin": "(?i)(?=@media(\\s|\\(|/\\*|$))",
+					"end": "(?<=})(?!\\G)",
+					"patterns": [
+						{
+							"begin": "(?i)\\G(@)media",
+							"beginCaptures": {
+								"0": {
+									"name": "keyword.control.at-rule.media.rasi"
+								},
+								"1": {
+									"name": "punctuation.definition.keyword.rasi"
+								}
+							},
+							"end": "(?=\\s*[{;])",
+							"name": "meta.at-rule.media.header.rasi",
+							"patterns": [
+								{
+									"include": "#media-query-list"
+								}
+							]
+						},
+						{
+							"begin": "{",
+							"beginCaptures": {
+								"0": {
+									"name": "punctuation.section.media.begin.bracket.curly.rasi"
+								}
+							},
+							"end": "}",
+							"endCaptures": {
+								"0": {
+									"name": "punctuation.section.media.end.bracket.curly.rasi"
+								}
+							},
+							"name": "meta.at-rule.media.body.rasi",
+							"patterns": [
+								{
+									"include": "$self"
+								}
+							]
 						}
 					]
 				}
 			]
 		},
-		"keywords": {
+		"booleans": {
 			"patterns": [
 				{
-					"name": "keyword.control.rasi",
-					"match": "\\b(if|while|for|return)\\b"
+					"match": "(?<![\\w-])(true|false)(?![\\w-])",
+					"name": "support.constant.boolean.rasi"
+				}
+			]
+		},
+		"color-keywords": {
+			"patterns": [
+				{
+					"match": "(?i)(?<![\\w-])(aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow)(?![\\w-])",
+					"name": "support.constant.color.w3c-standard-color-name.rasi"
+				},
+				{
+					"match": "(?xi) (?<![\\w-])\n(aliceblue|antiquewhite|aquamarine|azure|beige|bisque|blanchedalmond|blueviolet|brown|burlywood\n|cadetblue|chartreuse|chocolate|coral|cornflowerblue|cornsilk|crimson|cyan|darkblue|darkcyan\n|darkgoldenrod|darkgray|darkgreen|darkgrey|darkkhaki|darkmagenta|darkolivegreen|darkorange\n|darkorchid|darkred|darksalmon|darkseagreen|darkslateblue|darkslategray|darkslategrey|darkturquoise\n|darkviolet|deeppink|deepskyblue|dimgray|dimgrey|dodgerblue|firebrick|floralwhite|forestgreen\n|gainsboro|ghostwhite|gold|goldenrod|greenyellow|grey|honeydew|hotpink|indianred|indigo|ivory|khaki\n|lavender|lavenderblush|lawngreen|lemonchiffon|lightblue|lightcoral|lightcyan|lightgoldenrodyellow\n|lightgray|lightgreen|lightgrey|lightpink|lightsalmon|lightseagreen|lightskyblue|lightslategray\n|lightslategrey|lightsteelblue|lightyellow|limegreen|linen|magenta|mediumaquamarine|mediumblue\n|mediumorchid|mediumpurple|mediumseagreen|mediumslateblue|mediumspringgreen|mediumturquoise\n|mediumvioletred|midnightblue|mintcream|mistyrose|moccasin|navajowhite|oldlace|olivedrab|orangered\n|orchid|palegoldenrod|palegreen|paleturquoise|palevioletred|papayawhip|peachpuff|peru|pink|plum\n|powderblue|rebeccapurple|rosybrown|royalblue|saddlebrown|salmon|sandybrown|seagreen|seashell\n|sienna|skyblue|slateblue|slategray|slategrey|snow|springgreen|steelblue|tan|thistle|tomato\n|transparent|turquoise|violet|wheat|whitesmoke|yellowgreen)\n(?![\\w-])",
+					"name": "support.constant.color.w3c-extended-color-name.rasi"
+				}
+			]
+		},
+		"commas": {
+			"match": ",",
+			"name": "punctuation.separator.list.comma.rasi"
+		},
+		"environment-variable": {
+			"patterns": [
+				{
+					"begin": "(\\$)(\\{)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.definition.environment-variable.rasi"
+						},
+						"2": {
+							"name": "punctuation.section.keyword-list.begin.bracket.curly.rasi"
+						}
+					},
+					"end": "}",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.section.keyword-list.end.bracket.curly.rasi"
+						}
+					},
+					"name": "meta.environment-variable.rasi",
+					"patterns": [
+						{
+							"match": "\\w+",
+							"name": "variable.other.rasi"
+						}
+					]
+				}
+			]
+		},
+		"functions": {
+			"patterns": [
+				{
+					"begin": "(?i)(?<![\\w-])(rgba?|hsla?|hwb|cmyk)(\\()",
+					"beginCaptures": {
+						"1": {
+							"name": "support.function.misc.rasi"
+						},
+						"2": {
+							"name": "punctuation.section.function.begin.bracket.round.rasi"
+						}
+					},
+					"end": "\\)",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.section.function.end.bracket.round.rasi"
+						}
+					},
+					"name": "meta.function.color.rasi",
+					"patterns": [
+						{
+							"include": "#property-values"
+						}
+					]
+				}
+			]
+		},
+		"keyword-lists": {
+			"patterns": [
+				{
+					"begin": "\\[",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.section.keyword-list.begin.bracket.square.rasi"
+						}
+					},
+					"end": "\\]",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.section.keyword-list.end.bracket.square.rasi"
+						}
+					},
+					"name": "meta.keyword-list.rasi",
+					"patterns": [
+						{
+							"include": "#selector-innards"
+						}
+					]
+				}
+			]
+		},
+		"media-features": {
+			"captures": {
+				"1": {
+					"name": "support.type.property-name.media.rasi"
+				}
+			},
+			"match": "(?xi)\n(?<=^|\\s|\\(|\\*/)           # Preceded by whitespace, bracket or comment\n(?:\n  # Standardised features\n  (\n    (?:min|max)-              # Range features\n    (?: height\n      | width\n      | aspect-ratio\n    )\n    | monitor-id              # Discrete features\n  )\n)\n(?=\\s|$|:|\\)|/\\*)     # Terminates cleanly"
+		},
+		"media-query": {
+			"begin": "\\G",
+			"end": "(?=\\s*[{;])",
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"begin": "\\(",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.parameters.begin.bracket.round.rasi"
+						}
+					},
+					"end": "\\)",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.parameters.end.bracket.round.rasi"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#media-features"
+						},
+						{
+							"match": ":",
+							"name": "punctuation.separator.key-value.rasi"
+						},
+						{
+							"captures": {
+								"1": {
+									"name": "constant.numeric.rasi"
+								},
+								"2": {
+									"name": "keyword.operator.arithmetic.rasi"
+								},
+								"3": {
+									"name": "constant.numeric.rasi"
+								}
+							},
+							"match": "(\\d+)\\s*(/)\\s*(\\d+)",
+							"name": "meta.ratio.rasi"
+						},
+						{
+							"include": "#numeric-values"
+						},
+						{
+							"include": "#comments"
+						}
+					]
+				}
+			]
+		},
+		"media-query-list": {
+			"begin": "\\s*",
+			"end": "(?=\\s*[{;])",
+			"patterns": [
+				{
+					"include": "#media-query"
+				}
+			]
+		},
+		"numeric-values": {
+			"patterns": [
+				{
+					"match": "(#)(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\\b",
+					"captures": {
+						"1": {
+							"name": "punctuation.definition.constant.rasi"
+						}
+					},
+					"name": "constant.other.color.rgb-value.hex.rasi"
+				},
+				{
+					"match": "(?xi) (?<![\\w-])\n[-+]?                               # Sign indicator\n\n(?:                                 # Numerals\n    [0-9]+ (?:\\.[0-9]+)?           # Integer/float with leading digits\n)\n\n(?:                                 # Possible unit for data-type:\n  (%)                               # - Percentage\n  | ( px|em|ch|                     # - Length\n      deg|rad|grad|turn )           # - Angle\n  \\b                               # Boundary checking intentionally lax to\n)?",
+					"captures": {
+						"1": {
+							"name": "keyword.other.unit.percentage.rasi"
+						},
+						"2": {
+							"name": "keyword.other.unit.${2:/downcase}.rasi"
+						}
+					},
+					"name": "constant.numeric.rasi"
+				}
+			]
+		},
+		"property-keywords": {
+			"patterns": [
+				{
+					"match": "(?xi) (?<![\\w-])\n(background|bold|(custom|ok)(\\|alternate)?|dash|horizontal|inherit|italic|real|screenshot|small caps|solid|strikethrough|underline|vertical)\n(?![\\w-])",
+					"name": "support.constant.property-value.rasi"
+				},
+				{
+					"match": "(?xi) (?<![\\w-])\n(north|north east|east|south east|south|south west|west|north west)\n(?![\\w-])",
+					"name": "support.constant.property-value.position.rasi"
+				}
+			]
+		},
+		"property-names": {
+			"patterns": [
+				{
+					"match": "(?xi) (?<![\\w-])\n(?:\n  # Standard CSS\n  action|anchor|background-color|blink|border|border-color|border-radius|children|columns|content|cycle|dynamic|enabled|expand|fixed-columns|fixed-height|font|fullscreen|handle-width|handle-color|highlight|horizontal-align|layout|lines|location|margin|orientation|padding|placeholder|placeholder-color|reverse|scrollbar|scrollbar-width|spacing|str|text-color|transparency|vertical-align|width|x-offset|y-offset\n)\n(?![\\w-])",
+					"name": "support.type.property-name.rasi"
+				}
+			]
+		},
+		"property-values": {
+			"patterns": [
+				{
+					"include": "#booleans"
+				},
+				{
+					"include": "#color-keywords"
+				},
+				{
+					"include": "#commas"
+				},
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#environment-variable"
+				},
+				{
+					"include": "#functions"
+				},
+				{
+					"include": "#keyword-lists"
+				},
+				{
+					"include": "#property-keywords"
+				},
+				{
+					"include": "#numeric-values"
+				},
+				{
+					"include": "#references"
+				},
+				{
+					"include": "#strings"
+				}
+			]
+		},
+		"references": {
+			"patterns": [
+				{
+					"match": "(?<![\\w-])(@)([-a-zA-Z]+)(?![\\w-])",
+					"contains": {
+						"1": {
+							"name": "punctuation.definition.keyword.rasi"
+						}
+					},
+					"name": "keyword.control.at-rule.reference.rasi"
+				}
+			]
+		},
+		"rule-list": {
+			"begin": "{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.section.property-list.begin.bracket.curly.rasi"
+				}
+			},
+			"end": "}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.section.property-list.end.bracket.curly.rasi"
+				}
+			},
+			"name": "meta.property-list.rasi",
+			"patterns": [
+				{
+					"include": "#rule-list-innards"
+				}
+			]
+		},
+		"rule-list-innards": {
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"begin": "(?<![-a-zA-Z])(?=[-a-zA-Z])",
+					"end": "$|(?![-a-zA-Z])",
+					"name": "meta.property-name.rasi",
+					"patterns": [
+						{
+							"include": "#property-names"
+						}
+					]
+				},
+				{
+					"begin": "(:)\\s*",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.separator.key-value.rasi"
+						}
+					},
+					"end": "\\s*(;)|\\s*(?=}|\\))",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.terminator.rule.rasi"
+						}
+					},
+					"contentName": "meta.property-value.rasi",
+					"patterns": [
+						{
+							"include": "#comments"
+						},
+						{
+							"include": "#property-values"
+						}
+					]
+				},
+				{
+					"match": ";",
+					"name": "punctuation.terminator.rule.rasi"
+				}
+			]
+		},
+		"selector": {
+			"begin": "(?x)\n(?=\n  (?:\n    [-.*\\#a-zA-Z_]          # Valid selector character\n    |\n    [^\\x00-\\x7F]            # Which can include non-ASCII symbols\n  )\n)",
+			"end": "(?=\\s*[/@{)])",
+			"name": "meta.selector.rasi",
+			"patterns": [
+				{
+					"include": "#selector-innards"
+				}
+			]
+		},
+		"selector-innards": {
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#commas"
+				},
+				{
+					"include": "#tag-names"
+				},
+				{
+					"match": "\\*",
+					"name": "entity.name.tag.wildcard.rasi"
+				},
+				{
+					"match": "(?x)\n(\\.)                                  # Valid class-name\n(\n  (?: [-a-zA-Z_0-9]|[^\\x00-\\x7F])+   # Valid identifier characters\n)                                      # Followed by either:\n(?= $                                  # - End of the line\n  | [\\s,.\\#){]               # - Another selector\n  | /(\\*|/)                               # - A comment\n)",
+					"captures": {
+						"1": {
+							"name": "punctuation.definition.entity.rasi"
+						}
+					},
+					"name": "entity.other.attribute-name.class.rasi"
+				},
+				{
+					"match": "(?x)\n(\\#)\n(\n  -?\n  (?![0-9])\n  (?:[-a-zA-Z0-9_]|[^\\x00-\\x7F])+\n)\n(?=$|[\\s,.\\#){]|/\\*)",
+					"captures": {
+						"1": {
+							"name": "punctuation.definition.entity.rasi"
+						}
+					},
+					"name": "entity.other.attribute-name.id.rasi"
+				},
+				{
+					"match": "(?x) (?<![@\\w-])\n(?:\n  (?![A-Z])    # No uppercase ASCII letters are allowed\n  [\\w-]       # Allow any other word character or dash\n)+\n(?![(\\w-])",
+					"name": "entity.name.tag.custom.rasi"
 				}
 			]
 		},
@@ -103,6 +512,10 @@
 					"match": "\\\\."
 				}
 			]
+		},
+		"tag-names": {
+			"match": "(?xi) (?<![\\w:-])\n(?:\n    window|overlay|mainbox|inputbar|box|case-indicator|prompt|entry|num-rows|num-filtered-rows|listview|scrollbar|element|element-icon|element-index|element-text|mode-switcher|button|message|textbox|error-message|normal|selected|alternate\n)\n(?=[+~>\\s,.\\#|){:\\[]|/\\*|$)",
+			"name": "entity.name.tag.rasi"
 		}
 	}
 }
