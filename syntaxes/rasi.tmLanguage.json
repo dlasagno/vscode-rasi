@@ -322,7 +322,7 @@
 		"property-keywords": {
 			"patterns": [
 				{
-					"match": "(?xi) (?<![\\w-])\n(background|bold|(custom|ok)(\\|alternate)?|dash|horizontal|inherit|italic|real|screenshot|small caps|solid|strikethrough|underline|vertical)\n(?![\\w-])",
+					"match": "(?xi) (?<![\\w-])\n(background|bold|(custom|ok)(\\|alternate)?|dash|horizontal|inherit|italic|real|pointer|screenshot|small caps|solid|strikethrough|underline|vertical)\n(?![\\w-])",
 					"name": "support.constant.property-value.rasi"
 				},
 				{
@@ -334,7 +334,7 @@
 		"property-names": {
 			"patterns": [
 				{
-					"match": "(?xi) (?<![\\w-])\n(?:\n  # Standard CSS\n  action|anchor|background-color|blink|border|border-color|border-radius|children|columns|content|cycle|dynamic|enabled|expand|fixed-columns|fixed-height|font|fullscreen|handle-width|handle-color|highlight|horizontal-align|layout|lines|location|margin|orientation|padding|placeholder|placeholder-color|reverse|scrollbar|scrollbar-width|spacing|str|text-color|transparency|vertical-align|width|x-offset|y-offset\n)\n(?![\\w-])",
+					"match": "(?xi) (?<![\\w-])\n(?:\n  # Standard CSS\n  action|anchor|background-color|cursor|size|color|markup|blink|border|border-color|border-radius|children|columns|content|cycle|dynamic|enabled|expand|fixed-columns|fixed-height|font|fullscreen|handle-width|handle-color|highlight|horizontal-align|layout|lines|location|margin|orientation|padding|placeholder|placeholder-color|reverse|scrollbar|scrollbar-width|spacing|str|text-color|transparency|vertical-align|width|height|x-offset|y-offset\n)\n(?![\\w-])",
 					"name": "support.type.property-name.rasi"
 				}
 			]
